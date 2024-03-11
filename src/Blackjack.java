@@ -20,29 +20,15 @@ public class Blackjack {
     }
 
     private void run() {
-        // dealCards()
-
         deck.shuffle();
-        dealInitialCards();
+        dealCards();
         playerTurn();
         dealerTurn();
         determineWinner();
 
-        //player turn
-        System.out.println();
-        System.out.println("hit or stay?");
-        String response = kb.nextLine();
-
-        int count = 52;
-        while (response.equals("hit") && count > 0) {
-            player.add(deck.getCard());
-            System.out.println(player.getLast());
-            count--;
-        }
-
     }
 
-    private void dealInitialCards() {
+    private void dealCards() {
         player.add(deck.getCard());
         dealer.add(deck.getCard());
         player.add(deck.getCard());
@@ -58,19 +44,17 @@ public class Blackjack {
 
         for (Card card : hand) {
             int cardValue = card.getValue();
-            if (cardValue == 1) { // Ace
+            if (cardValue == 1) {
                 aceCount++;
-                value += 11; // Assume Ace is worth 11 initially
-            } else if (cardValue > 10) { // Face cards
+                value += 11;
+            } else if (cardValue > 10) {
                 value += 10;
             } else {
                 value += cardValue;
             }
         }
-
-        // Adjust Ace values if necessary
         while (aceCount > 0 && value > 21) {
-            value -= 10; // Change Ace value from 11 to 1
+            value -= 10;
             aceCount--;
         }
 
@@ -85,21 +69,21 @@ public class Blackjack {
             if (response.equals("hit")) {
                 player.add(deck.getCard());
                 System.out.println("Player's hand: " + player);
+                }
             }
-        } while (response.equals("hit") && calculateHandValue(player) <= 21);
+        while (response.equals("hit") && calculateHandValue(player) <= 21);
     }
 
     private void dealerTurn() {
-        // Reveal the dealer's facedown card
         System.out.println("Dealer's hand: " + dealer);
 
-        // Dealer hits until their hand value is 17 or higher
-        while (calculateHandValue(dealer) < 17) {
+        int playerHandValue = calculateHandValue(player);
+
+        while (playerHandValue <= 21 && calculateHandValue(dealer) < 17) {
             dealer.add(deck.getCard());
             System.out.println("Dealer hits: " + dealer.get(dealer.size() - 1));
         }
 
-        // Print the final dealer's hand
         System.out.println("Dealer's final hand: " + dealer);
     }
 
